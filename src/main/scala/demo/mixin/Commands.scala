@@ -19,7 +19,7 @@ import loci._
   self: Monitoring =>
 
   @peer type Receiver <: Oracle with Monitor with Actor {
-    type Tie <: Multiple[QuerySource] with Multiple[Monitored] with Multiple[ControlIssuer]
+    type Tie <: Multiple[Sender] with Multiple[QuerySource] with Multiple[Monitored] with Multiple[ControlIssuer]
   }
 
   @peer type Sender <: QuerySource with ControlIssuer {
