@@ -18,7 +18,7 @@ import scala.concurrent.Future
   }}
 
   val forceSave: Event[Unit] on Monitor = placed {
-//    shutdown.asLocalFromAll.map(t => t._2.changedTo(true)).reduce((x, y) => x || y)
+    val testFetch = shutdown.asLocalFromAll
     Evt[Unit]()
   }
 

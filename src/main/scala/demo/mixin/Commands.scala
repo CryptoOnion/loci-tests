@@ -33,7 +33,8 @@ import loci._
   @peer type Oracle <: Monitor { type Tie <: Multiple[QuerySource] with Multiple[Monitored] with Multiple[ControlIssuer] }
   @peer type QuerySource <: { type Tie <: Single[Oracle] with Single[Monitor] }
 
-  val commandOutput: Signal[String] on QuerySource = connected.asLocal.map("Connected: " + _)
+  val dataSource: Signal[Int] on Oracle = connected
+  val commandOutput: Signal[String] on QuerySource = dataSource.asLocal.map("Connected: " + _)
 }
 
 @multitier trait ControlCommand {
