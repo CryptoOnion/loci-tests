@@ -8,9 +8,9 @@ import loci._
 import scala.concurrent.Future
 
 @multitier trait Monitoring {
-  self: ControlCommand =>
+  self: Command =>
 
-  @peer type Monitor <: Actor { type Tie <: Multiple[Monitored] with Multiple[ControlIssuer] }
+  @peer type Monitor <: Receiver { type Tie <: Multiple[Monitored] }
   @peer type Monitored <: { type Tie <: Single[Monitor] }
 
   val connected: Signal[Int] on Monitor = placed { Signal.dynamic {

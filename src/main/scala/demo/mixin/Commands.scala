@@ -15,31 +15,19 @@ import loci._
 //  }
 //}
 
-@multitier trait Command extends QueryCommand with ControlCommand {
+@multitier trait Command {
   self: Monitoring =>
 
-  @peer type Receiver <: Oracle with Monitor with Actor {
-    type Tie <: Multiple[Sender] with Multiple[QuerySource] with Multiple[Monitored] with Multiple[ControlIssuer]
+  @peer type Receiver <: Monitor {
+    type Tie <: Multiple[Sender] with Multiple[Monitored]
   }
 
-  @peer type Sender <: QuerySource with ControlIssuer {
-    type Tie <: Single[Receiver] with Single[Oracle] with Single[Monitor] with Single[Actor]
+  @peer type Sender <: {
+    type Tie <: Single[Receiver] with Single[Monitor]
   }
-}
 
-@multitier trait QueryCommand {
-  self: Monitoring with ControlCommand =>
+  val dataSource: Signal[Int] on Receiver = connected
 
-  @peer type Oracle <: Monitor { type Tie <: Multiple[QuerySource] with Multiple[Monitored] with Multiple[ControlIssuer] }
-  @peer type QuerySource <: { type Tie <: Single[Oracle] with Single[Monitor] }
-
-  val dataSource: Signal[Int] on Oracle = connected
-  val commandOutput: Signal[String] on QuerySource = dataSource.asLocal.map("Connected: " + _)
-}
-
-@multitier trait ControlCommand {
-  @peer type Actor <: { type Tie <: Multiple[ControlIssuer] }
-  @peer type ControlIssuer <: { type Tie <: Single[Actor] }
-
-  val shutdown: Signal[Boolean] on ControlIssuer = Var(false)
+  val commandOutput: Signal[String] on Sender = dataSource.asLocal.map("Connected: " + _)
+  val shutdown: Signal[Boolean] on Sender = Var(false)
 }

@@ -27,14 +27,7 @@ import scala.concurrent.Future
 
   @peer type Worker <: Monitored { type Tie <: Single[Master] with Single[Monitor] }
   @peer type Client <: Sender {
-    // Why does Client need to include all tie specifications of Sender while Master
-    // doesn't need to include QuerySource and ControlIssuer for the Receiver peer type?
-    //
-    // Considering that super peers of Sender and Receiver could be inferred for the Master example
-    // based on the Multiple[Sender] relation, shouldn't this be the same for Single[Receiver]
-    //
-    // Dropping super relation to Oracle and Actor out, breaks compilation. So the ties need to be pulled up.
-    type Tie <: Single[Receiver] with Single[Oracle] with Single[Actor] with Single[Monitor]
+    type Tie <: Single[Receiver] with Single[Monitor]
   }
 }
 
